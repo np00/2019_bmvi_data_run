@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>BMVI Data-Run 2019</title>
+		<!-- styles -->
+		<link href="css/mapper.css" rel="stylesheet">
+		<link href="css/leaflet.css" rel="stylesheet">
+		<link href="css/codemirror.css" rel="stylesheet">
+		
+		<!-- data -->
+
+
+		<!-- js libs -->
+		<script src="js/lib/leaflet.js"></script> <!-- 1.3.3 -->
+		<script src="js/lib/AnimatedMarker.js"></script> <!-- n/a -->
+		<script src="js/lib/SnakeAnim.js"></script> <!-- n/a -->
+		<script src="js/lib/codemirror.js"></script> <!-- no idea -->
+  		<script src="js/config.js" defer></script>
+  		<script src="data/snake_route.js"></script> <!-- data for the snake oute --> 
+
+    	<script data-main="mapper" src="js/lib/require.js" defer></script>
+	</head>
+	<body bgcolor="Ivory" onload="init()">
+
+
+	<a href="https://github.com/np00/3rd_bmvi_datarun"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/a6677b08c955af8400f44c6298f40e7d19cc5b2d/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677261795f3664366436642e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png"></a>
+		
+		<h1>Make Data Search Fun</h1>
+      <input type="text" placeholder="Search Databases.." name="search">
+
+		<div id="map"></div>
+		<button type="button" onclick="clearMap();">ClearMap</button>
+		<div style="padding:25px 0 0 0"> 
+		<table>
+			<tr>
+				<th style="padding:0 25px 0 25px;" align="left"><img src="img/database_small.png" alt="Database Icon"> mCloud</th>
+				<th style="padding:0 25px 0 25px;" align="left"><img src="img/database_small.png" alt="Database Icon"> OpenStreetMap</th>
+				<th style="padding:0 25px 0 25px;" align="left"><img src="img/database_small.png" alt="Database Icon"> govdata.de</th>
+			</tr>
+			<tr>
+				<td style="padding:0 25px 0 25px;">
+					<textarea id="lgd_query" placeholder="Specify your SPARQL Query here" wrap="hard"></textarea>
+				</td>
+				<td style="padding:0 25px 0 25px;">
+					<textarea id="dbpedia_query" placeholder="Specify your SPARQL Query here" wrap="hard"></textarea>
+				</td>
+				<td style="padding:0 25px 0 25px;">
+					<textarea id="dbpedia_query" placeholder="Specify your SPARQL Query here" wrap="hard"></textarea>
+				</td>
+			</tr>
+			<tr>
+				<td style="padding:0 25px 0 25px;">
+					<button type="button" onclick="executeLgdQuery();">Execute Query</button>
+				</td>
+				<td style="padding:0 25px 0 25px;">
+					<button type="button" onclick="executeDbPediaQuery();">Execute Query</button>
+				</td>			
+				<td style="padding:0 25px 0 25px;">
+					<button type="button" onclick="executeNonExistingFunctiono();">Execute Query</button>
+				</td>
+			</tr>
+</table>
+
+<table class="sparql" border="1">
+  <tr>
+    <th>name</th>
+    <th>geo</th>
+  </tr>
+  <tr>
+    <td>"Blow Up"</td>
+    <td>"POINT(7.1037062 50.735059)"^^&lt;http://www.openlinksw.com/schemas/virtrdf#Geometry&gt;</td>
+  </tr>
+  <tr>
+    <td>"Weinkommissar"</td>
+    <td>"POINT(7.0996272 50.7365504)"^^&lt;http://www.openlinksw.com/schemas/virtrdf#Geometry&gt;</td>
+  </tr>
+  <tr>
+    <td>"Bar Ludwig"</td>
+    <td>"POINT(7.0947288 50.7379789)"^^&lt;http://www.openlinksw.com/schemas/virtrdf#Geometry&gt;</td>
+  </tr>
+  <tr>
+    <td>"extra dry"</td>
+    <td>"POINT(7.088463 50.7223029)"^^&lt;http://www.openlinksw.com/schemas/virtrdf#Geometry&gt;</td>
+  </tr>
+  <tr>
+    <td>"Nyx"</td>
+    <td>"POINT(7.0900926 50.739342)"^^&lt;http://www.openlinksw.com/schemas/virtrdf#Geometry&gt;</td>
+  </tr>
+  <tr>
+    <td>"Karizma"</td>
+    <td>"POINT(7.0936489105225 50.742710113525)"^^&lt;http://www.openlinksw.com/schemas/virtrdf#Geometry&gt;</td>
+  </tr>
+  <tr>
+    <td>"53 Cocktailbar &amp; Lounge"</td>
+    <td>"POINT(7.1053723 50.7356954)"^^&lt;http://www.openlinksw.com/schemas/virtrdf#Geometry&gt;</td>
+  </tr>
+  <tr>
+    <td>"Hausbar"</td>
+    <td>"POINT(7.1070659 50.7369941)"^^&lt;http://www.openlinksw.com/schemas/virtrdf#Geometry&gt;</td>
+  </tr>
+  <tr>
+    <td>"Che Guevara"</td>
+    <td>"POINT(7.0960674 50.7339745)"^^&lt;http://www.openlinksw.com/schemas/virtrdf#Geometry&gt;</td>
+  </tr>
+  <tr>
+    <td>"Shaker&#39;s"</td>
+    <td>"POINT(7.0928873 50.7365094)"^^&lt;http://www.openlinksw.com/schemas/virtrdf#Geometry&gt;</td>
+  </tr>
+</table>
+
+		<div id="map"></div>
+
+
+
+
+
+		<button type="button" onclick="clearMap();">ClearMap</button>
+		<button type="button" onclick="start_ice();">Start ICE</button>
+		<button type="button" onclick="start_tram_bonn();">Start Bonn Tram</button>
+		<button type="button" onclick="start_tram_to_siegburg();">Start Tram to Siegburg</button>
+		<button type="button" onclick="start_tram_from_siegburg();">Start Tram from Siegburg</button>
+	<!--	<button type="button" onclick="executeLgdQuery();">Get Restaurants around Siegburg</button> -->
+		<div style="padding:25px 0 0 0"> 
+		
+<!--
+		<table>
+			<tr>
+				<th style="padding:0 25px 0 25px;" align="left">LinkedGeoData <img src="img/database.png" alt="Database Icon"></th>
+				<th style="padding:0 25px 0 25px;" align="left">DBpedia <img src="img/database.png" alt="Database Icon"></th>
+			</tr>
+			<tr>
+				<td style="padding:0 25px 0 25px;">
+					<textarea id="lgd_query" placeholder="Specify your SPARQL Query here" wrap="hard"></textarea>
+				</td>
+				<td style="padding:0 25px 0 25px;">
+					<textarea id="dbpedia_query" placeholder="Specify your SPARQL Query here" wrap="hard"></textarea>
+				</td>
+			</tr>
+			<tr>
+				<td style="padding:0 25px 0 25px;">
+					<button type="button" onclick="executeLgdQuery();">Execute Query</button>
+				</td>
+				<td style="padding:0 25px 0 25px;">
+					<button type="button" onclick="executeDbPediaQuery();">Execute Query</button>
+				</td>
+			</tr>
+		</table>
+	-->
+	</div>
+	
+		<p>Team name: <b>Isengard</b></p>
+		<ul>
+			<li><a href="http://np00.github.io/">Niklas Petersen</a> - <a href="https://www.iais.fraunhofer.de/">Fraunhofer IAIS</a></li>
+			<li>Jörg Waitelonis - <a href= "https://yovisto.com/de/home/">Yovisto</li>
+		</ul>
+	<br>
+		<p>Source Code License: <a href="https://choosealicense.com/licenses/gpl-3.0/">GNU GPLv3 </a></p>
+		<br>
+
+	<p>------</p>
+2019
+<div>Icons made by <a href="https://www.flaticon.com/authors/smashicons" title="Smashicons">Smashicons</a> from <a href="https://www.flaticon.com/" 			    title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" 			    title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>	
+
+
+<div>Icons made by <a href="https://www.flaticon.com/authors/those-icons" title="Those Icons">Those Icons</a> from <a href="https://www.flaticon.com/" 			    title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" 			    title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+
+<div>Icons made by <a href="https://www.flaticon.com/authors/smashicons" title="Smashicons">Smashicons</a> from <a href="https://www.flaticon.com/" 			    title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" 			    title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+
+
+2018
+<div>Icons made by 
+		<a href="https://www.flaticon.com/authors/designmodo" title="Designmodo" font-size="small">Designmodo</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+
+<div>Icons made by <a href="https://www.flaticon.com/authors/scott-de-jonge" title="Scott de Jonge">Scott de Jonge</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+
+
+<div>Icons made by <a href="https://www.flaticon.com/authors/eleonor-wang" title="Eleonor Wang">Eleonor Wang</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+
+<div>Icons made by <a href="https://www.flaticon.com/authors/nikita-golubev" title="Nikita Golubev">Nikita Golubev</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+
+<div>Icons made by <a href="https://www.flaticon.com/authors/those-icons" title="Those Icons">Those Icons</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+
+
+<div>Icons made by <a href="https://www.flaticon.com/authors/cursor-creative" title="Cursor Creative">Cursor Creative</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+
+
+<div>Icons made by <a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+
+
+
+<div>Icons made by <a href="https://www.flaticon.com/authors/gregor-cresnar" title="Gregor Cresnar">Gregor Cresnar</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+
+<div>Icons made by <a href="https://www.flaticon.com/authors/bogdan-rosu" title="Bogdan Rosu">Bogdan Rosu</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+
+
+<div>Icons made by <a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+
+<div>Icons made by <a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+
+<div>Train Station Icon license: cc-by-2.0 at <a href="https://commons.wikimedia.org/wiki/File:Gfi-set01-railway1.png">Wikimedia Commons</a></div>
+	</body>
+</html>
+
+
+
+
+
