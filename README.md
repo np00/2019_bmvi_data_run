@@ -4,13 +4,14 @@ Hackthon Event: [BMVI Data-Run 22 March 2019](https://www.bmvi.de/SharedDocs/DE/
 
 Timespan: 24h
 
-Idea: **Making Data Search Fun Again**
+Idea: **Making Data Search Fun**
 
-Approach: < describe more in detail > 
+Approach: Building a map-based User Interface for data search in data portals 
 
-Demo: < insert gif >
+Web View: ![Gif Demo](https://github.com/np00/3rd_bmvi_datarun/blob/master/demo_video.gif)
+
 
 Team:
 - [Niklas Petersen](http://np00.github.io/) - [Fraunhofer IAIS](https://www.iais.fraunhofer.de/)
-- Jörg
+- Jörg Waitelonis - [Yovisto](https://yovisto.com/)
 
