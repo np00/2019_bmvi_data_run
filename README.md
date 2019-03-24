@@ -8,7 +8,7 @@ Idea: **Making Data Search Fun**
 
 Approach: Building a map-based User Interface for data search in data portals 
 
-Web View: ![Gif Demo](https://github.com/np00/3rd_bmvi_datarun/blob/master/demo_video.gif)
+Web View: ![Web View PNG](https://github.com/np00/2019_bmvi_data_run/blob/master/img/page_full_view.png)
 
 
 Team:
